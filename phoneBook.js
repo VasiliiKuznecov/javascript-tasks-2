@@ -3,7 +3,9 @@
 var phoneBook = [];
 
 module.exports.add = function add(name, phone, email) {
-    if (isValidPhone(phone) && isValidEmail(email) && typeof (name) === 'string' && name.length !== 0) {
+    if (isValidPhone(phone) && isValidEmail(email) &&
+        typeof (name) === 'string' && name.length !== 0
+    ) {
         var phoneBookRecord = {
             name: name,
             phone: phone,
@@ -14,27 +16,25 @@ module.exports.add = function add(name, phone, email) {
 };
 
 function isValidPhone(phone) {
-    var validPhoneRegexp = /^(\+?\d{1,2})? ?(\(\d{3}\)|\d{3}) ?(\d{7}|\d{3}-\d-\d{3}|\d{3} \d \d{3})$/;
+    var validPhoneRegexp
+        = /^(\+?\d{1,2})? ?(\(\d{3}\)|\d{3}) ?(\d{7}|\d{3}-\d-\d{3}|\d{3} \d \d{3})$/;
     return validPhoneRegexp.test(phone);
 }
 
 function isValidEmail(email) {
-    var validEmailRegexp = /^[a-zA-Z0-9._-]+@(([a-zA-Z0-9_-]+\.)+[a-zA-Z]+)|(([а-яА-Я0-9_-]+\.)+[а-яА-Я]+)$/;
+    var validEmailRegexp
+        = /^[a-zA-Z0-9._-]+@(([a-zA-Z0-9_-]+\.)+[a-zA-Z]+)|(([а-яА-Я0-9_-]+\.)+[а-яА-Я]+)$/;
     return validEmailRegexp.test(email);
 }
 
-/*
-   Функция поиска записи в телефонную книгу.
-   Поиск ведется по всем полям.
-*/
 module.exports.find = function find(query) {
     for (var i = 0; i < phoneBook.length; i++) {
         var phoneBookRecord = phoneBook[i];
         if (query === undefined ||
             phoneBookRecord.name.indexOf(query) != -1 ||
             phoneBookRecord.phone.indexOf(query) != -1 ||
-            phoneBookRecord.email.indexOf(query) != -1)
-        {
+            phoneBookRecord.email.indexOf(query) != -1
+        ) {
             console.log(
                 phoneBookRecord.name + ', ' +
                 phoneBookRecord.phone + ', ' +
@@ -44,17 +44,14 @@ module.exports.find = function find(query) {
     }
 };
 
-/*
-   Функция удаления записи в телефонной книге.
-*/
 module.exports.remove = function remove(query) {
     var removedCounter = 0;
     for (var i = 0; i < phoneBook.length; i++) {
         var phoneBookRecord = phoneBook[i];
         if (phoneBookRecord.name.indexOf(query) != -1 ||
             phoneBookRecord.phone.indexOf(query) != -1 ||
-            phoneBookRecord.email.indexOf(query) != -1)
-        {
+            phoneBookRecord.email.indexOf(query) != -1
+        ) {
             phoneBook.splice(i, 1);
             i--;
             removedCounter++;
@@ -63,22 +60,10 @@ module.exports.remove = function remove(query) {
     console.log('Удалено контактов: ' + removedCounter);
 };
 
-/*
-   Функция импорта записей из файла (задача со звёздочкой!).
-*/
 module.exports.importFromCsv = function importFromCsv(filename) {
     var data = require('fs').readFileSync(filename, 'utf-8');
-
-    // Ваша чёрная магия:
-    // - Разбираете записи из `data`
-    // - Добавляете каждую запись в книгу
 };
 
-/*
-   Функция вывода всех телефонов в виде ASCII (задача со звёздочкой!).
-*/
 module.exports.showTable = function showTable() {
-
-    // Ваша чёрная магия здесь
 
 };
