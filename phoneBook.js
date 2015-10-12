@@ -1,34 +1,70 @@
 'use strict';
 
-var phoneBook; // Здесь вы храните записи как хотите
+var phoneBook = []; // Здесь вы храните записи как хотите
 
 /*
    Функция добавления записи в телефонную книгу.
    На вход может прийти что угодно, будьте осторожны.
 */
 module.exports.add = function add(name, phone, email) {
-
-    // Ваша невероятная магия здесь
-
+    if (isValidPhone(phone) && isValidEmail(email) && typeof(name) === "string" && name.length !== 0) {
+        var phoneBookRecord = {
+            name:name,
+            phone:phone,
+            email:email
+        };
+        phoneBook.push(phoneBookRecord);
+    }
 };
+
+function isValidPhone(phone) {
+    var validPhoneRegexp = /^(\+?\d{1,2})? ?(\(\d{3}\)|\d{3}) ?(\d{7}|\d{3}-\d-\d{3}|\d{3} \d \d{3})$/;
+    return validPhoneRegexp.test(phone);
+}
+
+function isValidEmail(email) {
+    var validEmailRegexp = /^[a-zA-Z0-9._-]+@(([a-zA-Z0-9_-]+\.)+[a-zA-Z]+)|(([а-яА-Я0-9_-]+\.)+[а-яА-Я]+)$/;
+    return validEmailRegexp.test(email);
+}
 
 /*
    Функция поиска записи в телефонную книгу.
    Поиск ведется по всем полям.
 */
 module.exports.find = function find(query) {
-
-    // Ваша удивительная магия здесь
-
+    for (var i = 0 ; i < phoneBook.length ; i++) {
+        var phoneBookRecord = phoneBook[i];
+        if (query === undefined ||
+            phoneBookRecord.name.indexOf(query) != -1 ||
+            phoneBookRecord.phone.indexOf(query) != -1 ||
+            phoneBookRecord.email.indexOf(query) != -1)
+        {
+            console.log(
+                phoneBookRecord.name + ', ' +
+                phoneBookRecord.phone + ', ' +
+                phoneBookRecord.email
+            );
+        }
+    }
 };
 
 /*
    Функция удаления записи в телефонной книге.
 */
 module.exports.remove = function remove(query) {
-
-    // Ваша необьяснимая магия здесь
-
+    var removedCounter = 0;
+    for (var i = 0 ; i < phoneBook.length ; i++) {
+        var phoneBookRecord = phoneBook[i];
+        if (phoneBookRecord.name.indexOf(query) != -1 ||
+            phoneBookRecord.phone.indexOf(query) != -1 ||
+            phoneBookRecord.email.indexOf(query) != -1)
+        {
+            phoneBook.splice(i, 1);
+            i--;
+            removedCounter++;
+        }
+    }
+    console.log("Удалено контактов: " + removedCounter);
 };
 
 /*
