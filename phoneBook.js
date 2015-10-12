@@ -12,7 +12,9 @@ module.exports.add = function add(name, phone, email) {
             email: email
         };
         phoneBook.push(phoneBookRecord);
+        return true;
     }
+    return false;
 };
 
 function isValidPhone(phone) {
@@ -45,7 +47,7 @@ module.exports.find = function find(query) {
 };
 
 module.exports.remove = function remove(query) {
-    var removedCounter = 0;
+    var recordsRemoved = 0;
     for (var i = 0; i < phoneBook.length; i++) {
         var phoneBookRecord = phoneBook[i];
         if (phoneBookRecord.name.indexOf(query) != -1 ||
@@ -54,14 +56,22 @@ module.exports.remove = function remove(query) {
         ) {
             phoneBook.splice(i, 1);
             i--;
-            removedCounter++;
+            recordsRemoved++;
         }
     }
-    console.log('Удалено контактов: ' + removedCounter);
+    console.log('Удалено контактов: ' + recordsRemoved);
 };
 
 module.exports.importFromCsv = function importFromCsv(filename) {
     var data = require('fs').readFileSync(filename, 'utf-8');
+    var records = data.split('\n');
+    var recordsAdded = 0;
+    for (var i = 0; i < records.length; i++) {
+        if (module.exports.add.apply(this, records[i].split(';'))) {
+            recordsAdded++;
+        }
+    }
+    console.log('Записей добавлено: ' + recordsAdded);
 };
 
 module.exports.showTable = function showTable() {
