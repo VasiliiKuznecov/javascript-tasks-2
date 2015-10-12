@@ -1,17 +1,13 @@
 'use strict';
 
-var phoneBook = []; // Здесь вы храните записи как хотите
+var phoneBook = [];
 
-/*
-   Функция добавления записи в телефонную книгу.
-   На вход может прийти что угодно, будьте осторожны.
-*/
 module.exports.add = function add(name, phone, email) {
-    if (isValidPhone(phone) && isValidEmail(email) && typeof(name) === "string" && name.length !== 0) {
+    if (isValidPhone(phone) && isValidEmail(email) && typeof (name) === 'string' && name.length !== 0) {
         var phoneBookRecord = {
-            name:name,
-            phone:phone,
-            email:email
+            name: name,
+            phone: phone,
+            email: email
         };
         phoneBook.push(phoneBookRecord);
     }
@@ -32,7 +28,7 @@ function isValidEmail(email) {
    Поиск ведется по всем полям.
 */
 module.exports.find = function find(query) {
-    for (var i = 0 ; i < phoneBook.length ; i++) {
+    for (var i = 0; i < phoneBook.length; i++) {
         var phoneBookRecord = phoneBook[i];
         if (query === undefined ||
             phoneBookRecord.name.indexOf(query) != -1 ||
@@ -53,7 +49,7 @@ module.exports.find = function find(query) {
 */
 module.exports.remove = function remove(query) {
     var removedCounter = 0;
-    for (var i = 0 ; i < phoneBook.length ; i++) {
+    for (var i = 0; i < phoneBook.length; i++) {
         var phoneBookRecord = phoneBook[i];
         if (phoneBookRecord.name.indexOf(query) != -1 ||
             phoneBookRecord.phone.indexOf(query) != -1 ||
@@ -64,7 +60,7 @@ module.exports.remove = function remove(query) {
             removedCounter++;
         }
     }
-    console.log("Удалено контактов: " + removedCounter);
+    console.log('Удалено контактов: ' + removedCounter);
 };
 
 /*
