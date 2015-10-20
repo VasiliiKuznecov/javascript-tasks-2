@@ -4,7 +4,7 @@ var phoneBook = [];
 
 module.exports.add = function add(name, phone, email) {
     if (isValidPhone(phone) && isValidEmail(email) &&
-        typeof (name) === 'string' && name.length !== 0
+        typeof name === 'string' && name.length !== 0
     ) {
         var phoneBookRecord = {
             name: name,
@@ -18,25 +18,27 @@ module.exports.add = function add(name, phone, email) {
 };
 
 function isValidPhone(phone) {
+    if (typeof phone !== 'string') {
+        return false;
+    }
     var validPhoneRegexp
         = /^((\+?\d{1,2})? ?(\(\d{3}\)|\d{3}) ?)?(\d{7}|\d{3}-\d-\d{3}|\d{3} \d \d{3})$/;
     return validPhoneRegexp.test(phone);
 }
 
 function isValidEmail(email) {
+    if (typeof email !== 'string') {
+        return false;
+    }
     var validEmailRegexp
-        = /^[a-zA-Z0-9._-]+@(([a-zA-Z0-9_-]+\.)+[a-zA-Z]+)|(([а-яА-Я0-9_-]+\.)+[а-яА-Я]+)$/;
+        = /^[^@]+@([^@]+\.)+[^@]+$/;
     return validEmailRegexp.test(email);
 }
 
 module.exports.find = function find(query) {
     for (var i = 0; i < phoneBook.length; i++) {
         var phoneBookRecord = phoneBook[i];
-        if (query === undefined ||
-            phoneBookRecord.name.indexOf(query) != -1 ||
-            phoneBookRecord.phone.indexOf(query) != -1 ||
-            phoneBookRecord.email.indexOf(query) != -1
-        ) {
+        if (query === undefined || recordMatchsQuery(phoneBookRecord, query)) {
             console.log(
                 phoneBookRecord.name + ', ' +
                 phoneBookRecord.phone + ', ' +
@@ -50,10 +52,7 @@ module.exports.remove = function remove(query) {
     var recordsRemoved = 0;
     for (var i = 0; i < phoneBook.length; i++) {
         var phoneBookRecord = phoneBook[i];
-        if (phoneBookRecord.name.indexOf(query) != -1 ||
-            phoneBookRecord.phone.indexOf(query) != -1 ||
-            phoneBookRecord.email.indexOf(query) != -1
-        ) {
+        if (recordMatchsQuery(phoneBookRecord, query)) {
             phoneBook.splice(i, 1);
             i--;
             recordsRemoved++;
@@ -62,11 +61,18 @@ module.exports.remove = function remove(query) {
     console.log('Удалено контактов: ' + recordsRemoved);
 };
 
+function recordMatchsQuery(record, query) {
+    return record.name.indexOf(query) !== -1 ||
+        record.phone.indexOf(query) !== -1 ||
+        record.email.indexOf(query) !== -1;
+}
+
 module.exports.importFromCsv = function importFromCsv(filename) {
     var data = require('fs').readFileSync(filename, 'utf-8');
-    var records = data.split('\r\n');
+    var records = data.split('\n');
     var recordsAdded = 0;
     for (var i = 0; i < records.length; i++) {
+        records[i] = records[i].trim();
         if (module.exports.add.apply(this, records[i].split(';'))) {
             recordsAdded++;
         }
